@@ -11,7 +11,7 @@ var di = require('di'),
     dgram = require('dgram'),
     server = dgram.createSocket('udp4'),
     logger = injector.get('Logger').initialize('SysLog'),
-    nconf = injector.get('Services.Nconf'),
+    configuration = injector.get('Services.Configuration'),
     _ = injector.get('_'),
     levels = [
         'emerg',
@@ -66,4 +66,4 @@ server.on('close', function () {
     logger.notice('Closed');
 });
 
-server.bind(nconf.get('port'));
+server.bind(configuration.get('port'));
