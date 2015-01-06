@@ -24,15 +24,15 @@ var di = require('di'),
     ];
 
 server.on('message', function (data, remote) {
-    logger.info(data.toString('utf8'), remote);
+    data = data.toString('utf8');
 
-    var match = data.message.match(/<(\d+)>(.+)/),
-            message = data.message,
+    var match = data.match(/<(\d+)>(.+)/),
+            message = data,
             level = 'info',
             meta = {};
 
-        if (data.remote.address) {
-            meta.ip = data.remote.address;
+        if (remote.address) {
+            meta.ip = remote.address;
         }
 
         if (match) {
