@@ -4,66 +4,33 @@
 'use strict';
 
 var di = require('di'),
+    _ = require('lodash'),
     core = require('renasar-core')(di),
     injector = new di.Injector(
-        core.injectables
+        _.flatten([
+            core.injectables,
+            require('./lib/app')
+        ])
     ),
-    dgram = require('dgram'),
-    server = dgram.createSocket('udp4'),
-    logger = injector.get('Logger').initialize('SysLog'),
-    configuration = injector.get('Services.Configuration'),
-    _ = injector.get('_'),
-    levels = [
-        'emerg',
-        'alert',
-        'crit',
-        'error',
-        'warning',
-        'notice',
-        'info',
-        'debug'
-    ];
+    syslog = injector.get('Syslog');
 
-server.on('message', function (data, remote) {
-    data = data.toString('utf8');
-
-    var match = data.match(/<(\d+)>(.+)/),
-            message = data,
-            level = 'info',
-            meta = {};
-
-        if (remote.address) {
-            meta.ip = remote.address;
-        }
-
-        if (match) {
-            var prival = parseInt(match[1]),
-                facility = Math.floor(prival / 8),
-                priority = prival - (facility * 8);
-
-            level = levels[priority];
-            message = match[2].trim();
-        }
-
-        if(_.keys(meta).length) {
-            logger[level](message, meta);
-        } else {
-            logger[level](message);
-        }
+syslog.start()
+.catch(function(err) {
+  console.error('Failure starting Syslog service' + err.stack);
+  process.nextTick(function(){
+    process.exit(1);
+  });
 });
 
-server.on('listening', function () {
-    logger.notice('Listening');
-});
-
-server.on('error', function (error) {
-    logger.error('SysLog Service Error.', {
-        error: error
+process.on('SIGINT',function() {
+  syslog.stop()
+  .catch(function(err) {
+    console.error('Failure cleaning up Syslog service' + err.stack);
+  })
+  .fin(function() {
+    process.nextTick(function(){
+      process.exit(1);
     });
+  });
 });
 
-server.on('close', function () {
-    logger.notice('Closed');
-});
-
-server.bind(configuration.get('port'));
