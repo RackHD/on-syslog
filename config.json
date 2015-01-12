@@ -9,5 +9,6 @@
         "database": "pxe",
         "user": "",
         "password": ""
-    }
+    },
+    "statsdPrefix": "syslog."
 }
