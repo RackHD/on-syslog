@@ -12,11 +12,12 @@ var di = require('di'),
             require('./lib/app')
         ])
     ),
+    logger = injector.get('Logger').initialize('Syslog'),
     syslog = injector.get('Syslog');
 
 syslog.start()
 .catch(function(err) {
-  console.error('Failure starting Syslog service' + err.stack);
+  logger.error('Failure starting Syslog service' + err.stack);
   process.nextTick(function(){
     process.exit(1);
   });
@@ -25,7 +26,7 @@ syslog.start()
 process.on('SIGINT',function() {
   syslog.stop()
   .catch(function(err) {
-    console.error('Failure cleaning up Syslog service' + err.stack);
+    logger.error('Failure cleaning up Syslog service' + err.stack);
   })
   .fin(function() {
     process.nextTick(function(){
