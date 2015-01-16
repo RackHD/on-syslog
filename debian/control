@@ -1,0 +1,17 @@
+Source: renasar-syslog
+Section: utilties
+Priority: optional
+Maintainer: Joe Heck <joseph.heck@renasar.com>
+Build-Depends: debhelper (>= 8.0.0)
+Standards-Version: 3.9.4
+Homepage: http://www.renasar.com/
+
+Package: renasar-syslog
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends},
+ nodejs,
+ nodejs-legacy,
+ npm,
+ mongodb
+Description: renasar-syslog
+ Syslog service component
