@@ -67,6 +67,11 @@ describe(__filename, function () {
             expect(syslog.stop).to.be.a('function');
         });
 
+        it('should process event "message"');
+        it('should process event "listening"');
+        it('should process event "error"');
+        it('should process event "close"');
+
     });
 
 });
