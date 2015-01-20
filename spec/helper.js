@@ -35,6 +35,8 @@ var core = require('renasar-core')(di)
 
 global.helper = {
 
+    di: di,
+
     /**
     * Helper for requiring files based on the cwd which is the root of the project.
     */
