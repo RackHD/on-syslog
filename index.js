@@ -9,6 +9,7 @@ var di = require('di'),
     injector = new di.Injector(
         _.flatten([
             core.injectables,
+            core.helper.requireWrapper('dgram'),
             require('./lib/app')
         ])
     ),

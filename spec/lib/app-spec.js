@@ -7,24 +7,27 @@ describe(__filename, function () {
 
     var injector;
     var Q = helper.baseInjector.get('Q');
+    var util = require('util');
+    var EventEmitter = require('events').EventEmitter;
+
+    var fakeserver; // for mocking the server
 
     // mocking the Services.Core
     // does nothing - just returns a resolved promise.
     var mockCoreFactory = function () {
-        function MockCore() {
-        }
+        function MockCore() {}
 
         MockCore.prototype.start = function () {
             return Q.resolve();
         };
+        return new MockCore();
     };
     helper.di.annotate(mockCoreFactory, new helper.di.Provide('Services.Core'));
 
     // mocking the Services.Configuration
     // returns static values for config requests
     var mockConfigFactory = function () {
-        function MockConfig() {
-        }
+        function MockConfig() {}
 
         MockConfig.prototype.get = function (key) {
             if (key === 'port') {
@@ -33,8 +36,28 @@ describe(__filename, function () {
                 return 9999;
             }
         };
+        return new MockConfig();
     };
     helper.di.annotate(mockConfigFactory, new helper.di.Provide('Services.Configuration'));
+
+
+    var mockDgramFactory = function() {
+
+        function FakeServer() {
+            this.bind = function() {};
+        }
+        util.inherits(FakeServer, EventEmitter);
+
+        function MockDgram() {}
+
+        MockDgram.prototype.createSocket = function() {
+            fakeserver = new FakeServer();
+            return fakeserver;
+        };
+
+        return new MockDgram();
+    };
+    helper.di.annotate(mockDgramFactory, new helper.di.Provide('dgram'));
 
 
     before(function () {
@@ -44,6 +67,7 @@ describe(__filename, function () {
             helper.require('/spec/mocks/logger.js'),
             mockConfigFactory,
             mockCoreFactory,
+            mockDgramFactory,
             helper.require('/lib/app.js')
         ]));
     });
@@ -67,8 +91,23 @@ describe(__filename, function () {
             expect(syslog.stop).to.be.a('function');
         });
 
-        it('should process event "message"');
-        it('should process event "listening"');
+        it('should process event "message"', function() {
+            var syslog = injector.get('Syslog');
+            //return syslog.start().then(function() {
+            //    //fakeserver.emit('message', {
+            //    //    remote: {
+            //    //        address: '1.2.3.4'
+            //    //    }
+            //    //});
+            //});
+        });
+
+        it('should process event "listening"', function() {
+            var syslog = injector.get('Syslog');
+            return syslog.start().then(function() {
+                fakeserver.emit('listening');
+            });
+        });
         it('should process event "error"');
         it('should process event "close"');
 
