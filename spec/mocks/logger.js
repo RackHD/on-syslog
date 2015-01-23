@@ -57,6 +57,8 @@ function mockLoggerFactory(Constants, assert, LogEvent, _) {
         }
     }
 
+    var singletonLogger = new Logger(mockLoggerFactory);
+
     /**
      * _log
      * @param {string} level Log Level
@@ -75,18 +77,7 @@ function mockLoggerFactory(Constants, assert, LogEvent, _) {
         if (context) {
             assert.object(context, 'Context must be an object if specified.');
         }
-
-        return LogEvent.create(
-            self.module, level, message, context || {}
-        ).then(function (log) {
-            return log.print();
-        }).catch(function (error) {
-            // Comment these out because we will always throw on startup
-            // when printing messages before the messenger has started.
-            // Useful for debugging but annoying everywhere else
-            console.log(error);
-            console.log(error.stack);
-        });
+        console.log("MOCKLOG: ["+level+"] "+message);
     };
 
     // Iterate the available levels and create the appropriate prototype function.
@@ -102,8 +93,8 @@ function mockLoggerFactory(Constants, assert, LogEvent, _) {
         };
     });
 
-    Logger.initialize = function (module) {
-        return new Logger(module);
+    Logger.initialize = function () {
+        return singletonLogger;
     };
 
     return Logger;
