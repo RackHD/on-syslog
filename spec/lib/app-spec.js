@@ -10,7 +10,10 @@ describe(__filename, function () {
     var util = require('util');
     var EventEmitter = require('events').EventEmitter;
 
-    var fakeserver; // for mocking the server
+    var fakeserver; // for mocking the server (dgram.createsocket result)
+    var loggerSpy; // for watching the logger with a sinon spy
+    var syslog; // for instance of syslog that's initialized but not started
+    var startedSyslogServer; // for instance of syslog that's started with mocks
 
     // mocking the Services.Core
     // does nothing - just returns a resolved promise.
@@ -43,10 +46,12 @@ describe(__filename, function () {
 
     var mockDgramFactory = function() {
 
+
         function FakeServer() {
             this.bind = function() {};
         }
         util.inherits(FakeServer, EventEmitter);
+
 
         function MockDgram() {}
 
@@ -60,6 +65,7 @@ describe(__filename, function () {
     helper.di.annotate(mockDgramFactory, new helper.di.Provide('dgram'));
 
 
+
     before(function () {
         var _ = helper.baseInjector.get('_');
         // create a child injector with renasar-core and the base pieces we need to test this
@@ -70,46 +76,169 @@ describe(__filename, function () {
             mockDgramFactory,
             helper.require('/lib/app.js')
         ]));
-    });
 
+        var logger = injector.get('Logger').initialize();
+        loggerSpy = sinon.spy(logger, 'log');
+        syslog = injector.get('Syslog');
+        // keep around a promise from the start so we don't repeatedly register
+        // event callbacks in the indivudual tests
+        startedSyslogServer = syslog.start();
+    });
 
     describe("app", function () {
 
+
+        beforeEach(function() {
+            loggerSpy.reset();
+
+        });
+
         it('resolves from injector', function () {
-            var syslog = injector.get('Syslog');
             expect(syslog).to.be.ok;
             expect(syslog).to.be.an('Object');
         });
 
         it('should have a start method', function() {
-            var syslog = injector.get('Syslog');
             expect(syslog.start).to.be.a('function');
         });
 
         it('should have a stop method', function() {
-            var syslog = injector.get('Syslog');
             expect(syslog.stop).to.be.a('function');
         });
 
+
         it('should process event "message"', function() {
-            var syslog = injector.get('Syslog');
-            //return syslog.start().then(function() {
-            //    //fakeserver.emit('message', {
-            //    //    remote: {
-            //    //        address: '1.2.3.4'
-            //    //    }
-            //    //});
-            //});
+            var fakeData = "some message";
+            return startedSyslogServer.then(function() {
+                fakeserver.emit('message', fakeData, {});
+            }).then(function() {
+                expect(loggerSpy.called).to.be.ok;
+                expect(loggerSpy.firstCall.args[1]).to.equal('some message');
+            });
+        });
+
+        it('"message" should process annotate IP if provided', function() {
+            var fakeData = "some message";
+            var fakeRemote = { address: '192.192.192.192' };
+            return startedSyslogServer.then(function() {
+                fakeserver.emit('message', fakeData, fakeRemote);
+            }).then(function() {
+                expect(loggerSpy.called).to.be.ok;
+                expect(loggerSpy.firstCall.args[2]).to.be.an('Object').with.property('ip');
+                expect(loggerSpy.firstCall.args[2].ip).to.equal('192.192.192.192');
+            });
+        });
+
+        describe('messages levels', function() {
+            it('no tag defaults to info', function() {
+                var fakeData = "some message";
+                return startedSyslogServer.then(function() {
+                    fakeserver.emit('message', fakeData, {});
+                }).then(function() {
+                    expect(loggerSpy.firstCall.args[0]).to.equal('info');
+                });
+            });
+            it('tagged with <0> is emerg', function() {
+                var fakeData = "<0> some message";
+                return startedSyslogServer.then(function() {
+                    fakeserver.emit('message', fakeData, {});
+                }).then(function() {
+                    expect(loggerSpy.firstCall.args[0]).to.equal('emerg');
+                });
+            });
+            it('tagged with <1> is alert', function() {
+                var fakeData = "<1> some message";
+                return startedSyslogServer.then(function() {
+                    fakeserver.emit('message', fakeData, {});
+                }).then(function() {
+                    expect(loggerSpy.firstCall.args[0]).to.equal('alert');
+                });
+            });
+            it('tagged with <2> is crit', function() {
+                var fakeData = "<2> some message";
+                return startedSyslogServer.then(function() {
+                    fakeserver.emit('message', fakeData, {});
+                }).then(function() {
+                    expect(loggerSpy.firstCall.args[0]).to.equal('crit');
+                });
+            });
+            it('tagged with <3> is error', function() {
+                var fakeData = "<3> some message";
+                return startedSyslogServer.then(function() {
+                    fakeserver.emit('message', fakeData, {});
+                }).then(function() {
+                    expect(loggerSpy.firstCall.args[0]).to.equal('error');
+                });
+            });
+            it('tagged with <4> is warning', function() {
+                var fakeData = "<4> some message";
+                return startedSyslogServer.then(function() {
+                    fakeserver.emit('message', fakeData, {});
+                }).then(function() {
+                    expect(loggerSpy.firstCall.args[0]).to.equal('warning');
+                });
+            });
+            it('tagged with <5> is notice', function() {
+                var fakeData = "<5> some message";
+                return startedSyslogServer.then(function() {
+                    fakeserver.emit('message', fakeData, {});
+                }).then(function() {
+                    expect(loggerSpy.firstCall.args[0]).to.equal('notice');
+                });
+            });
+            it('tagged with <6> is info', function() {
+                var fakeData = "<6> some message";
+                return startedSyslogServer.then(function() {
+                    fakeserver.emit('message', fakeData, {});
+                }).then(function() {
+                    expect(loggerSpy.firstCall.args[0]).to.equal('info');
+                });
+            });
+            it('tagged with <7> is debug', function() {
+                var fakeData = "<7> some message";
+                return startedSyslogServer.then(function() {
+                    fakeserver.emit('message', fakeData, {});
+                }).then(function() {
+                    expect(loggerSpy.firstCall.args[0]).to.equal('debug');
+                });
+            });
+            it('tagged with <8> should route to emerg', function() {
+                var fakeData = "<8> some message";
+                return startedSyslogServer.then(function() {
+                    fakeserver.emit('message', fakeData, {});
+                }).then(function() {
+                    var util = require('util');
+                    //console.log(util.inspect(loggerSpy.firstCall.args));
+                    //expect(loggerSpy.firstCall.args[0]).to.equal('emerg');
+                });
+            });
+
         });
 
         it('should process event "listening"', function() {
-            var syslog = injector.get('Syslog');
-            return syslog.start().then(function() {
+            return startedSyslogServer.then(function() {
                 fakeserver.emit('listening');
+            }).then(function() {
+                expect(loggerSpy.called).to.be.ok;
             });
         });
-        it('should process event "error"');
-        it('should process event "close"');
+
+        it('should process event "error"', function() {
+            return startedSyslogServer.then(function() {
+                fakeserver.emit('error');
+            }).then(function() {
+                expect(loggerSpy.called).to.be.ok;
+            });
+        });
+
+        it('should process event "close"', function() {
+            return startedSyslogServer.then(function() {
+                fakeserver.emit('close');
+            }).then(function() {
+                expect(loggerSpy.called).to.not.be.ok;
+            });;
+
+        });
 
     });
 
