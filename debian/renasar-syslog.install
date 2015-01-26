@@ -1,5 +1,4 @@
 node_modules /var/renasar/renasar-syslog
 lib /var/renasar/renasar-syslog
 index.js /var/renasar/renasar-syslog
-app.js /var/renasar/renasar-syslog
 config.json /var/renasar/renasar-syslog
