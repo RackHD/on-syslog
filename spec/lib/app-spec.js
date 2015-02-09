@@ -3,7 +3,7 @@
 
 'use strict';
 
-describe(__filename, function () {
+describe(require('path').basename(__filename), function () {
 
     var injector;
     var Q = helper.baseInjector.get('Q');
