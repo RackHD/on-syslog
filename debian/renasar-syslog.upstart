@@ -1,6 +1,6 @@
 description "run the renasar syslog service"
 
-start on started mongodb
+start on started rabbitmq-server
 stop on runlevel [!2345]
 respawn
 
