@@ -207,7 +207,7 @@ describe(require('path').basename(__filename), function () {
                 return startedSyslogServer.then(function() {
                     fakeserver.emit('message', fakeData, {});
                 }).then(function() {
-                    var util = require('util');
+                    //var util = require('util');
                     //console.log(util.inspect(loggerSpy.firstCall.args));
                     //expect(loggerSpy.firstCall.args[0]).to.equal('emerg');
                 });
@@ -236,7 +236,7 @@ describe(require('path').basename(__filename), function () {
                 fakeserver.emit('close');
             }).then(function() {
                 expect(loggerSpy.called).to.not.be.ok;
-            });;
+            });
 
         });
 
