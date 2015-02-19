@@ -2,7 +2,7 @@ description "run the renasar syslog service"
 
 env config=/etc/default/renasar-syslog
 
-start on started rabbitmq-server
+start on started (rabbitmq-server-running or rabbitmq-server)
 stop on runlevel [!2345]
 respawn
 
