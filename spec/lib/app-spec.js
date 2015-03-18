@@ -68,7 +68,7 @@ describe(require('path').basename(__filename), function () {
 
     before(function () {
         var _ = helper.baseInjector.get('_');
-        // create a child injector with renasar-core and the base pieces we need to test this
+        // create a child injector with on-core and the base pieces we need to test this
         injector = helper.baseInjector.createChild(_.flatten([
             helper.require('/spec/mocks/logger.js'),
             mockConfigFactory,
