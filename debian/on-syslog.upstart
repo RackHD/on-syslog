@@ -1,0 +1,17 @@
+description "run the monorail syslog service"
+
+env config=/etc/default/on-syslog
+
+start on (rabbitmq-server-running or started rabbitmq-server)
+stop on runlevel [!2345]
+respawn
+
+pre-start script
+[ -e "$config" ] || { echo "${config} missing, not starting"; stop; exit 0; }
+end script
+
+script
+    echo Starting monorail syslog service
+    chdir /var/renasar/on-syslog
+    exec /usr/bin/nodejs /var/renasar/on-syslog/index.js
+end script
