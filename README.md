@@ -1,7 +1,6 @@
-renasar-syslog
-==============
+# on-syslog
 
-Renasar syslog service
+Monorail syslog service
 
 ## installation
 
