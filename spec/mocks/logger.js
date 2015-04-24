@@ -11,12 +11,11 @@ di.annotate(mockLoggerFactory,
     new di.Inject(
         'Constants',
         'Assert',
-        'LogEvent',
         '_'
     )
 );
 
-function mockLoggerFactory(Constants, assert, LogEvent, _) {
+function mockLoggerFactory(Constants, assert, _) {
 
     /**
      * Logger is a logger class which provides methods for logging based
@@ -66,28 +65,10 @@ function mockLoggerFactory(Constants, assert, LogEvent, _) {
      * @param {object} [context] Log Metadata
      * @private
      */
-    Logger.prototype.log = function (level, message, context) {
-        var self = this;
-
-        assert.string(level, 'Must specifiy a level.');
-        assert.ok(_.has(Constants.Logging.Levels, level), 'Invalid level specified.');
-
-        assert.string(message, 'Must specify a message.');
-
-        if (context) {
-            assert.object(context, 'Context must be an object if specified.');
-        }
-        console.log("MOCKLOG: ["+level+"] "+message);
+    Logger.prototype.log = function () {
     };
 
-    // Iterate the available levels and create the appropriate prototype function.
     _.keys(Constants.Logging.Levels).forEach(function(level) {
-        /**
-         * level - Helper method to allow logging by using the specific level
-         * as the method instead of calling log directly.
-         * @param {string} message Log Message
-         * @param {object} [context] Log Metadata
-         */
         Logger.prototype[level] = function (message, context) {
             this.log(level, message, context);
         };
@@ -99,3 +80,4 @@ function mockLoggerFactory(Constants, assert, LogEvent, _) {
 
     return Logger;
 }
+
