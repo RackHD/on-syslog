@@ -29,7 +29,7 @@ process.on('SIGINT',function() {
   .catch(function(err) {
     logger.error('Failure cleaning up Syslog service' + err.stack);
   })
-  .fin(function() {
+  .finally(function() {
     process.nextTick(function(){
       process.exit(1);
     });
