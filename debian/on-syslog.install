@@ -1,5 +1,4 @@
 node_modules /var/renasar/on-syslog
 lib /var/renasar/on-syslog
 index.js /var/renasar/on-syslog
-config.json /var/renasar/on-syslog
 commitstring.txt /var/renasar/on-syslog
