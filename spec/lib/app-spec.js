@@ -6,7 +6,7 @@
 describe(require('path').basename(__filename), function () {
 
     var injector;
-    var Q = helper.baseInjector.get('Q');
+    var Promise = helper.baseInjector.get('Promise');
     var util = require('util');
     var EventEmitter = require('events').EventEmitter;
 
@@ -21,7 +21,7 @@ describe(require('path').basename(__filename), function () {
         function MockCore() {}
 
         MockCore.prototype.start = function () {
-            return Q.resolve();
+            return Promise.resolve();
         };
         return new MockCore();
     };

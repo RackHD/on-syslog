@@ -71,11 +71,11 @@ global.helper = {
         if (arguments.length === 0) {
             injector = this.baseInjector;
         }
-        var Q = injector.get('Q');
+        var Promise = injector.get('Promise');
         return helper.initializeWaterline(injector).then(function (waterline) { // jshint ignore:line
-            /* drop doesn't actually return a promise, but leaving this Q.all in here in case
+            /* drop doesn't actually return a promise, but leaving this Promise.all in here in case
             * we need to switch to using destroy() */
-            return Q.all(_.map(waterline, function (collection) { // jshint ignore:line
+            return Promise.all(_.map(waterline, function (collection) { // jshint ignore:line
                 if (typeof collection.drop === 'function') {
                     return collection.drop({});
                 }
