@@ -1,3 +1,5 @@
+Copyright 2015, EMC, Inc.
+
 # on-syslog
 
 Monorail syslog service
