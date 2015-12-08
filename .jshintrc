@@ -40,6 +40,7 @@
     "evil" : false,
     "expr" : true,     // true: Tolerate `ExpressionStatement` as Programs
     "funcscope" : false,
+    "globalstrict" : false,
     "iterator" : false,
     "lastsemic" : false,
     "laxbreak" : false,
@@ -71,6 +72,11 @@
         "request": false,
         "helper": false,
         "chai": false,
-        "sinon": false
+        "sinon": false,
+        "dihelper": false,
+        "_": false,
+        "Q": false,
+        "core": false
     }
 }
+
