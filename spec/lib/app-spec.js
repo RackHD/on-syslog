@@ -143,7 +143,7 @@ describe(require('path').basename(__filename), function () {
                 return startedSyslogServer.then(function() {
                     fakeserver.emit('message', fakeData, {});
                 }).then(function() {
-                    expect(loggerSpy.firstCall.args[0]).to.equal('emerg');
+                    expect(loggerSpy.firstCall.args[0]).to.equal('critical');
                 });
             });
             it('tagged with <1> is alert', function() {
@@ -151,7 +151,7 @@ describe(require('path').basename(__filename), function () {
                 return startedSyslogServer.then(function() {
                     fakeserver.emit('message', fakeData, {});
                 }).then(function() {
-                    expect(loggerSpy.firstCall.args[0]).to.equal('alert');
+                    expect(loggerSpy.firstCall.args[0]).to.equal('critical');
                 });
             });
             it('tagged with <2> is crit', function() {
@@ -159,7 +159,7 @@ describe(require('path').basename(__filename), function () {
                 return startedSyslogServer.then(function() {
                     fakeserver.emit('message', fakeData, {});
                 }).then(function() {
-                    expect(loggerSpy.firstCall.args[0]).to.equal('crit');
+                    expect(loggerSpy.firstCall.args[0]).to.equal('critical');
                 });
             });
             it('tagged with <3> is error', function() {
@@ -183,7 +183,7 @@ describe(require('path').basename(__filename), function () {
                 return startedSyslogServer.then(function() {
                     fakeserver.emit('message', fakeData, {});
                 }).then(function() {
-                    expect(loggerSpy.firstCall.args[0]).to.equal('notice');
+                    expect(loggerSpy.firstCall.args[0]).to.equal('info');
                 });
             });
             it('tagged with <6> is info', function() {
