@@ -6,7 +6,7 @@ var di = require('di'),
     _ = require('lodash'),
     core = require('on-core')(di),
     injector = new di.Injector(
-        _.flatten([
+        _.flattenDeep([
             core.injectables,
             core.helper.requireWrapper('dgram'),
             require('./lib/app')
@@ -34,4 +34,3 @@ process.on('SIGINT',function() {
     });
   });
 });
-
