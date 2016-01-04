@@ -14,7 +14,7 @@
   "license": "Apache-2.0",
   "dependencies": {
     "di": "git+https://github.com/RackHD/di.js.git",
-    "lodash": "^2.4.1",
+    "lodash": "^3.10.1",
     "on-core": "git+https://github.com/RackHD/on-core.git"
   },
   "devDependencies": {
