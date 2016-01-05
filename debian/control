@@ -7,10 +7,5 @@ Standards-Version: 3.9.4
 
 Package: on-syslog
 Architecture: any
-Depends: ${shlibs:Depends}, ${misc:Depends},
- nodejs,
- nodejs-legacy,
- npm,
- mongodb
-Description: on-syslog
- Syslog service component
+Depends: ${shlibs:Depends}, ${misc:Depends}, nodejs, nodejs-legacy, npm, mongodb
+Description: RackHD Syslog service component
