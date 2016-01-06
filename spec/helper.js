@@ -33,7 +33,7 @@ global.helper = {
     * Most commonly used classes / modules, override or extend as needed
     * with child injector
     */
-    baseInjector: new di.Injector(_.flatten([ // jshint ignore:line
+    baseInjector: new di.Injector(_.flattenDeep([ // jshint ignore:line
         core.injectables,
         ])),
 
