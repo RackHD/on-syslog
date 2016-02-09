@@ -1,0 +1,13 @@
+.bintray.json
+.dockerignore
+.git
+.gitignore
+.hound.yml
+.jshintrc
+.travis.yml
+Dockerfile
+Gruntfile.js
+HWIMO-*
+LICENSE
+README.md
+spec/

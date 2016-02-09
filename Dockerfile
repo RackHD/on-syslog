@@ -17,5 +17,4 @@ RUN cp -a /tmp/node_modules /RackHD/on-syslog/
 EXPOSE 514
 EXPOSE 514/udp
 
-ENTRYPOINT [ "node" ]
-CMD [ "/RackHD/on-syslog/index.js" ]
+CMD [ "node", "/RackHD/on-syslog/index.js" ]
