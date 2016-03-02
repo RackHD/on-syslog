@@ -12,9 +12,8 @@ RUN cd /tmp \
   && npm install --ignore-scripts --production
 
 COPY . /RackHD/on-syslog/
-RUN cp -a /tmp/node_modules /RackHD/on-syslog/
+RUN cp -a -f /tmp/node_modules /RackHD/on-syslog/
 
-EXPOSE 514
 EXPOSE 514/udp
 
 CMD [ "node", "/RackHD/on-syslog/index.js" ]
