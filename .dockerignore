@@ -6,6 +6,7 @@
 .jshintrc
 .travis.yml
 Dockerfile
+extra/
 Gruntfile.js
 HWIMO-*
 LICENSE
