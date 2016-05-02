@@ -5,9 +5,11 @@
 .hound.yml
 .jshintrc
 .travis.yml
+debian/
 Dockerfile
 Gruntfile.js
 HWIMO-*
 LICENSE
+node_modules/
 README.md
 spec/
