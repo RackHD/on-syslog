@@ -48,3 +48,6 @@ on-syslog_*.tar.xz
 on-syslog_*.build
 on-syslog_*.changes
 on-syslog_*.deb
+
+# Vagrant
+.vagrant/
