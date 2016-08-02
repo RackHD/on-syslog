@@ -40,5 +40,14 @@ node_modules
 # IDE
 .idea
 
+# package detritus
+packagebuild/
+on-syslog_*.dsc
+on-syslog_*.tar.gz
+on-syslog_*.tar.xz
+on-syslog_*.build
+on-syslog_*.changes
+on-syslog_*.deb
+
 # Vagrant
 .vagrant/

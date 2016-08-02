@@ -1,0 +1,47 @@
+#!/bin/sh
+
+. /lib/lsb/init-functions
+
+### BEGIN INIT INFO
+# Provides:          on-syslog
+# Required-Start:    $syslog $network mongodb rabbitmq-server
+# Required-Stop:     $syslog $network
+# Default-Start:     2 3 4 5
+# Default-Stop:      0 1 6
+# Short-Description: on-syslog
+# Description:       RackHD on-syslog service
+### END INIT INFO
+
+DESC="on-syslog"
+
+CONFIG=/etc/default/on-syslog
+
+do_start()
+{
+    if [ -f "$CONFIG" ]
+    then
+	cd /var/renasar/on-syslog
+	(/usr/bin/nodejs /var/renasar/on-syslog/index.js | logger -t on-syslog ) &
+	log_success_msg "Started on-syslog daemon"
+    else
+        log_failure_msg "Config file $CONFIG missing, not starting"
+    fi
+}
+
+
+ACTION=$1
+
+case "$ACTION" in
+
+    start)
+	do_start
+	;;
+    stop | restart | reload | force-reload | status)
+	# unimplemented
+	;;
+    *)
+	logger "Unknown action \"$ACTION\""
+	;;
+esac
+
+exit 0
