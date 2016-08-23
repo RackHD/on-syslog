@@ -28,6 +28,11 @@ do_start()
     fi
 }
 
+do_stop()
+{
+    pkill -f "/usr/bin/nodejs /var/renasar/on-syslog/index.js"
+    log_success_msg "Stopped on-syslog daemon"
+}
 
 ACTION=$1
 
@@ -36,8 +41,15 @@ case "$ACTION" in
     start)
 	do_start
 	;;
-    stop | restart | reload | force-reload | status)
-	# unimplemented
+    stop)
+        do_stop
+        ;;
+    restart)
+        do_stop
+        do_start
+        ;;
+    reload | force-reload | status)
+        # unimplemented
 	;;
     *)
 	logger "Unknown action \"$ACTION\""
