@@ -1,6 +1,7 @@
 {
+  "//": "Copyright 2017, Dell EMC, Inc.",
   "name": "on-syslog",
-  "version": "2.27.0",
+  "version": "2.29.0",
   "description": "RackHD Syslog Server",
   "main": "index.js",
   "scripts": {
